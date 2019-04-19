@@ -89,7 +89,6 @@ int send_request(int fd, char *hostname, char *port, char *path)
     "\n",
     path, hostname, port);
 
-  printf("%s\n", request);
 
   rv = send(fd, request, request_length, 0);
 
@@ -115,15 +114,11 @@ int main(int argc, char *argv[])
     send_request(sockfd, urlinfo->hostname, urlinfo->port, urlinfo->path);
     // 4. Call `recv` in a loop until there is no more data to receive from the server. Print the received response to stdout.
     while ((numbytes = recv(sockfd, buf, BUFSIZE - 1, 0)) > 0) {
-        printf("%s\n", buf);
+        fwrite(buf, 1, numbytes, stdout);
     }
     // 5. Clean up any allocated memory and open file descriptors.
-    close(sockfd);
-    free(urlinfo->port);
-    free(urlinfo->hostname);
-    free(urlinfo->path);
     free(urlinfo);
-
+    close(sockfd);
 
   return 0;
 }
